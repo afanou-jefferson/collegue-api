@@ -35,9 +35,6 @@ public class CollegueService {
 		collegue.setMatricule(UUID.randomUUID().toString());
 		collegue.setEmail(dto.getPrenoms() + "." + dto.getNom() + "@dev.fr");
 
-		// => envoyer un email aux RHs
-		// ...
-
 		return this.collegueRepo.save(collegue);// insert into collegue
 
 	}
