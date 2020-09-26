@@ -47,7 +47,7 @@ public class ControllerCollegue {
 
 		Optional<Collegue> collegueDuMatricule = this.collegueService.rechercherParMatricule(matricule);
 
-		if (!collegueDuMatricule.isEmpty()) {
+		if (collegueDuMatricule.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(collegueDuMatricule);
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collegue non trouvé avec ce Matricule . . .");
