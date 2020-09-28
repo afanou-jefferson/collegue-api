@@ -1,13 +1,19 @@
 package dev.collegue.web;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.collegue.dto.CreerCollegueRequestDto;
 import dev.collegue.dto.GetCollegueByNomResponseDto;
+import dev.collegue.dto.UpdateCollegueRequestDto;
 import dev.collegue.entity.Collegue;
 import dev.collegue.service.CollegueService;
 
+@CrossOrigin
 @RestController // == @ResponseBody + @controller
 @RequestMapping("collegues") // rootUrl/collegues... appel ce controlleur par défaut
 public class ControllerCollegue {
@@ -66,7 +74,17 @@ public class ControllerCollegue {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Echec lors de la création du nouveau collegue . . .");
 		}
+	}
 
+	@PutMapping("collegues/update")
+	public ResponseEntity<?> updateCollegue(@Valid @RequestBody UpdateCollegueRequestDto dtoRequest,
+			BindingResult resValid) throws ParseException {
+		if (!resValid.hasErrors()) {
+			Collegue response1 = this.collegueService.updateCollegue(dtoRequest);
+			return ResponseEntity.ok().body(response1);
+		} else {
+			return ResponseEntity.badRequest().body("Une erreur est survenue lors de l'update du Collegue");
+		}
 	}
 
 }
