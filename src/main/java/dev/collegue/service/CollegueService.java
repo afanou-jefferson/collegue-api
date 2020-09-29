@@ -38,8 +38,7 @@ public class CollegueService {
 		if (!listeResponse.isEmpty()) {
 			for (Optional<Collegue> collegue : listeResponse) {
 
-				GetCollegueByNomResponseDto newDto = new GetCollegueByNomResponseDto(collegue.get().getNom(),
-						collegue.get().getMatricule());
+				GetCollegueByNomResponseDto newDto = new GetCollegueByNomResponseDto(collegue.get().getMatricule());
 				listeDto.add(newDto);
 			}
 		}
