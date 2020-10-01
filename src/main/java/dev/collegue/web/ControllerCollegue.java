@@ -1,6 +1,7 @@
 package dev.collegue.web;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.collegue.dto.CreerCollegueRequestDto;
-import dev.collegue.dto.GetCollegueByNomResponseDto;
+import dev.collegue.dto.MatriculePhotoUrlResponseDto;
 import dev.collegue.dto.UpdateCollegueRequestDto;
 import dev.collegue.entity.Collegue;
 import dev.collegue.service.CollegueService;
@@ -41,7 +42,7 @@ public class ControllerCollegue {
 	@GetMapping
 	public ResponseEntity<?> rechercherMatriculeParNom(@RequestParam String nom) { // ?nom=....
 
-		List<GetCollegueByNomResponseDto> listeCollegueRespDto = this.collegueService.rechercherParNom(nom);
+		List<String> listeCollegueRespDto = this.collegueService.rechercherParNom(nom);
 
 		if (!listeCollegueRespDto.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(listeCollegueRespDto);
@@ -50,7 +51,7 @@ public class ControllerCollegue {
 		}
 	}
 
-	@GetMapping("{matricule}") // == collegues/matricule
+	@GetMapping("{matricule}") // == collegues/${matricule}
 	public ResponseEntity<?> rechercherCollegueParMatricule(@PathVariable String matricule) {
 
 		Optional<Collegue> collegueDuMatricule = this.collegueService.rechercherParMatricule(matricule);
@@ -60,7 +61,18 @@ public class ControllerCollegue {
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collegue non trouvé avec ce Matricule . . .");
 		}
+	}
 
+	@RequestMapping("/photos") // == url/collegues/photos
+	public ResponseEntity<?> getAllPhotosCollegues() {
+
+		ArrayList<MatriculePhotoUrlResponseDto> ensembleUrlPhotos = this.collegueService.getAllPhotosUrl();
+
+		if (!ensembleUrlPhotos.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(ensembleUrlPhotos);
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pas de collegues trouvés . . .");
+		}
 	}
 
 	@PostMapping

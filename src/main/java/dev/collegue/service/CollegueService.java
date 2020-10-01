@@ -14,7 +14,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import dev.collegue.dto.CreerCollegueRequestDto;
-import dev.collegue.dto.GetCollegueByNomResponseDto;
+import dev.collegue.dto.MatriculePhotoUrlResponseDto;
 import dev.collegue.dto.UpdateCollegueRequestDto;
 import dev.collegue.entity.Collegue;
 import dev.collegue.repository.CollegueRepo;
@@ -29,21 +29,20 @@ public class CollegueService {
 		this.collegueRepo = collegueRepo;
 	}
 
-	public List<GetCollegueByNomResponseDto> rechercherParNom(String nom) {
+	public List<String> rechercherParNom(String nom) {
 
-		List<GetCollegueByNomResponseDto> listeDto = new ArrayList<>();
+		List<String> listeMatricule = new ArrayList<>();
 
 		List<Optional<Collegue>> listeResponse = collegueRepo.findByNom(nom);
 
 		if (!listeResponse.isEmpty()) {
 			for (Optional<Collegue> collegue : listeResponse) {
 
-				GetCollegueByNomResponseDto newDto = new GetCollegueByNomResponseDto(collegue.get().getMatricule());
-				listeDto.add(newDto);
+				String newMatricule = collegue.get().getMatricule();
+				listeMatricule.add(newMatricule);
 			}
 		}
-
-		return listeDto;
+		return listeMatricule;
 	}
 
 	public Optional<Collegue> rechercherParMatricule(String matricule) {
@@ -80,6 +79,22 @@ public class CollegueService {
 		collegue.setPhotoUrl(dtoRequest.getPhotoUrl());
 
 		return this.collegueRepo.save(collegue);
+	}
+
+	public ArrayList<MatriculePhotoUrlResponseDto> getAllPhotosUrl() {
+
+		ArrayList<MatriculePhotoUrlResponseDto> listeBinomes = new ArrayList<>();
+
+		List<Collegue> listeCollegues = this.collegueRepo.findAll();
+
+		for (Collegue col : listeCollegues) {
+			MatriculePhotoUrlResponseDto newBinome = new MatriculePhotoUrlResponseDto(col.getMatricule(),
+					col.getPhotoUrl());
+			listeBinomes.add(newBinome);
+		}
+
+		return listeBinomes;
+
 	}
 
 }
